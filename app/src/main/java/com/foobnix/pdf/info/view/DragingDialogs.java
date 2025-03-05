@@ -76,6 +76,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
+import androidx.webkit.WebSettingsCompat;
+import androidx.webkit.WebViewFeature;
 
 import com.foobnix.StringResponse;
 import com.foobnix.android.utils.Apps;
@@ -229,6 +231,17 @@ public class DragingDialogs {
                 wv.getSettings().setJavaScriptEnabled(true);
                 wv.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 
+                // Force Dark Mode
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    wv.getSettings().setAlgorithmicDarkeningAllowed(true);
+                } else {
+                    if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
+                        WebSettingsCompat.setForceDark(wv.getSettings(), WebSettingsCompat.FORCE_DARK_ON);
+                    }
+                    if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK_STRATEGY)) {
+                        WebSettingsCompat.setForceDarkStrategy(wv.getSettings(), WebSettingsCompat.DARK_STRATEGY_WEB_THEME_DARKENING_ONLY);
+                    }
+                }
 
                 wv.loadUrl(url);
 
